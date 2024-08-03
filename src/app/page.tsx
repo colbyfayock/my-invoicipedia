@@ -1,6 +1,11 @@
 import Link from 'next/link';
+import { sql } from 'drizzle-orm'
 
-export default function Home() {
+import { db } from '@/db';
+
+export default async function Home() {
+  const result = await db.execute(sql`SELECT current_database()`);
+  console.log('result', result.rows);
   return (
     <main className="h-full flex flex-col justify-center text-center">
       <h1 className="text-5xl font-bold mb-6">
