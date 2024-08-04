@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { ChevronDown, CreditCard, Ellipsis, Trash } from 'lucide-react';
+import { eq } from 'drizzle-orm';
 
 import { cn } from '@/lib/utils';
+import { db } from '@/db';
+import { Invoices } from '@/db/schema';
 
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -11,15 +14,10 @@ import Container from '@/components/Container';
 
 import { AVAILABLE_STATUSES } from '@/data/invoices';
 
-export default async function InvoicePage() {
-  const invoice = {
-    id: 1,
-    name: 'Sample Invoice',
-    dateCreated: Date.now(),
-    value: 1234,
-    description: 'This is a sample invoice.',
-    status: 'open',
-  };
+export default async function InvoicePage({ params }: { params: { invoiceId: string } }) {
+  const [invoice] = await db.select().from(Invoices)
+      .where(eq(Invoices.id, parseInt(params.invoiceId)))
+      .limit(1);
 
   const status = AVAILABLE_STATUSES.find(status => status.id === invoice.status);
   
@@ -46,7 +44,7 @@ export default async function InvoicePage() {
             </Badge>
           </h2>
           <p className="text-sm">
-            { new Date(invoice.dateCreated).toLocaleDateString() }
+            { new Date(invoice.create_ts).toLocaleDateString() }
           </p>
         </div>
 
@@ -130,7 +128,7 @@ export default async function InvoicePage() {
         </li>
         <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Invoice Date</strong>
-          <span>{ new Date(invoice.dateCreated).toLocaleDateString() }</span>
+          <span>{ new Date(invoice.create_ts).toLocaleDateString() }</span>
         </li>
         {/* <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Billing Name</strong>
