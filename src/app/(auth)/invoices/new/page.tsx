@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { createInvoice } from '@/app/actions';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
@@ -17,7 +19,7 @@ export default function InvoiceNew() {
         Create a New Invoice
       </h2>
 
-      <form className="grid gap-4 max-w-xs">
+      <form action={createInvoice} className="grid gap-4 max-w-xs">
         <div>
           <Label htmlFor="name" className="block mb-2">Billing Name</Label>
           <Input id="name" name="name" type="text" />
