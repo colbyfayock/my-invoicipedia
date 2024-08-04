@@ -7,16 +7,11 @@ import { AVAILABLE_STATUSES } from '@/data/invoices';
 import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import Container from '@/components/Container';
+import { db } from '@/db';
+import { Invoices } from '@/db/schema';
 
 export default async function Dashboard() {
-  const invoices = [{
-    id: 1,
-    name: 'Sample Invoice',
-    dateCreated: Date.now(),
-    value: 1234,
-    description: 'This is a sample invoice.',
-    status: 'open',
-  }];
+  const invoices = await db.select().from(Invoices)
   return (
     <Container>
       <div className="flex justify-between items-center w-full mb-6">
@@ -49,9 +44,9 @@ export default async function Dashboard() {
             return (
               <TableRow key={invoice.id}>
                 <TableCell className="hidden md:table-cell p-0">
-                  <span className="block p-4">
-                    { new Date(invoice.dateCreated).toLocaleDateString() }
-                  </span>
+                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                    { new Date(invoice.create_ts).toLocaleDateString() }
+                  </Link>
                 </TableCell>
                 {/* <TableCell className="p-0">
                   <span className="block p-4">
@@ -68,7 +63,7 @@ export default async function Dashboard() {
                   </span>
                 </TableCell> */}
                 <TableCell className="hidden sm:table-cell p-0">
-                  <span className="block p-4">
+                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <Badge
                       className={cn(
                         "text-xs",
@@ -80,12 +75,12 @@ export default async function Dashboard() {
                     >
                       { status?.label || 'Unknown' }
                     </Badge>
-                  </span>
+                  </Link>
                 </TableCell>
                 <TableCell className="text-right p-0">
-                  <span className="block p-4">
+                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     ${ invoice.value / 100 }
-                  </span>
+                  </Link>
                 </TableCell>
               </TableRow>
             )
