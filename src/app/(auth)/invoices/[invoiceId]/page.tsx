@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import { ChevronDown, CreditCard, Ellipsis, Trash } from 'lucide-react';
 import { eq } from 'drizzle-orm';
 
@@ -15,9 +16,21 @@ import Container from '@/components/Container';
 import { AVAILABLE_STATUSES } from '@/data/invoices';
 
 export default async function InvoicePage({ params }: { params: { invoiceId: string } }) {
+  const invoiceId = parseInt(params.invoiceId);
+
+  // Could just 404, but good example
+  
+  if ( isNaN(invoiceId) ) {
+    throw new Error('Invalid invoice ID');
+  }
+
   const [invoice] = await db.select().from(Invoices)
-      .where(eq(Invoices.id, parseInt(params.invoiceId)))
+      .where(eq(Invoices.id, invoiceId))
       .limit(1);
+
+  if ( !invoice ) {
+    notFound();
+  }
 
   const status = AVAILABLE_STATUSES.find(status => status.id === invoice.status);
   
