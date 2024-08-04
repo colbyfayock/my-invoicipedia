@@ -49,26 +49,26 @@ export default async function Dashboard() {
             return (
               <TableRow key={invoice.id}>
                 <TableCell className="hidden md:table-cell p-0">
-                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                  <span className="block p-4">
                     { new Date(invoice.dateCreated).toLocaleDateString() }
-                  </Link>
+                  </span>
                 </TableCell>
                 {/* <TableCell className="p-0">
-                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                  <span className="block p-4">
                     <p className="font-medium">
                       { invoice.customer.name }
                     </p>
-                  </Link>
+                  </span>
                 </TableCell> */}
                 {/* <TableCell className="p-0">
-                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                  <span className="block p-4">
                     <p className="text-muted-foreground">
                       { invoice.customer.email }
                     </p>
-                  </Link>
+                  </span>
                 </TableCell> */}
                 <TableCell className="hidden sm:table-cell p-0">
-                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                  <span className="block p-4">
                     <Badge
                       className={cn(
                         "text-xs",
@@ -80,12 +80,12 @@ export default async function Dashboard() {
                     >
                       { status?.label || 'Unknown' }
                     </Badge>
-                  </Link>
+                  </span>
                 </TableCell>
                 <TableCell className="text-right p-0">
-                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
+                  <span className="block p-4">
                     ${ invoice.value / 100 }
-                  </Link>
+                  </span>
                 </TableCell>
               </TableRow>
             )
