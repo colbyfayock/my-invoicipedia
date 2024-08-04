@@ -13,12 +13,6 @@ export async function createInvoice(formData: FormData) {
   const description = formData.get('description') as string;
   const value = Math.floor(parseFloat(formData.get('value') as string) * 100);  
 
-  console.log({
-    description,
-    status: 'open',
-    value,
-  })
-
   const results = await db.insert(Invoices)
     .values({
       description,

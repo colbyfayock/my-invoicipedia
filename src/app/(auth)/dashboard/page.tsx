@@ -8,8 +8,6 @@ import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import Container from '@/components/Container';
 
-const INVOICES_PER_PAGE = 5;
-
 export default async function Dashboard() {
   const invoices = [{
     id: 1,
@@ -18,12 +16,7 @@ export default async function Dashboard() {
     value: 1234,
     description: 'This is a sample invoice.',
     status: 'open',
-    customer: {
-      name: 'John Smith',
-      email: 'john@smith.com'
-    }
   }];
-
   return (
     <Container>
       <div className="flex justify-between items-center w-full mb-6">
@@ -44,8 +37,8 @@ export default async function Dashboard() {
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="hidden md:table-cell">Date</TableHead>
-            <TableHead>Customer</TableHead>
-            <TableHead>Email</TableHead>
+            {/* <TableHead>Customer</TableHead> */}
+            {/* <TableHead>Email</TableHead> */}
             <TableHead className="hidden sm:table-cell">Status</TableHead>
             <TableHead className="text-right">Value</TableHead>
           </TableRow>
@@ -60,20 +53,20 @@ export default async function Dashboard() {
                     { new Date(invoice.dateCreated).toLocaleDateString() }
                   </Link>
                 </TableCell>
-                <TableCell className="p-0">
+                {/* <TableCell className="p-0">
                   <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <p className="font-medium">
                       { invoice.customer.name }
                     </p>
                   </Link>
-                </TableCell>
-                <TableCell className="p-0">
+                </TableCell> */}
+                {/* <TableCell className="p-0">
                   <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <p className="text-muted-foreground">
                       { invoice.customer.email }
                     </p>
                   </Link>
-                </TableCell>
+                </TableCell> */}
                 <TableCell className="hidden sm:table-cell p-0">
                   <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <Badge
@@ -94,19 +87,6 @@ export default async function Dashboard() {
                     ${ invoice.value / 100 }
                   </Link>
                 </TableCell>
-              </TableRow>
-            )
-          })}
-          {invoices && invoices.length % INVOICES_PER_PAGE !== 0 && [...new Array(INVOICES_PER_PAGE - invoices.length)].map((_, index) => {
-            return (
-              <TableRow key={index} className="border-transparent bg-transparent hover:bg-transparent" aria-hidden>
-                <TableCell className="hidden md:table-cell p-0">&nbsp;</TableCell>
-                <TableCell className="p-4">&nbsp; </TableCell>
-                <TableCell className="p-4">&nbsp;</TableCell>
-                <TableCell className="hidden sm:table-cell p-4">
-                  <Badge className={"text-xs invisible"}>&nbsp;</Badge>
-                </TableCell>
-                <TableCell className="text-right p-4">&nbsp;</TableCell>
               </TableRow>
             )
           })}
