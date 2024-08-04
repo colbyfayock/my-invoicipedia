@@ -19,10 +19,6 @@ export default async function InvoicePage() {
     value: 1234,
     description: 'This is a sample invoice.',
     status: 'open',
-    customer: {
-      name: 'John Smith',
-      email: 'john@smith.com'
-    }
   };
 
   const status = AVAILABLE_STATUSES.find(status => status.id === invoice.status);
@@ -136,14 +132,14 @@ export default async function InvoicePage() {
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Invoice Date</strong>
           <span>{ new Date(invoice.dateCreated).toLocaleDateString() }</span>
         </li>
-        <li className="flex gap-4">
+        {/* <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Billing Name</strong>
           <span>{ invoice.customer.name }</span>
-        </li>
-        <li className="flex gap-4">
+        </li> */}
+        {/* <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Billing Email</strong>
           <span>{ invoice.customer.email }</span>
-        </li>
+        </li> */}
       </ul>
     </Container>
   );
