@@ -1,4 +1,8 @@
+"use client";
+
+// import { startTransition, SyntheticEvent, useState } from 'react';
 import Link from 'next/link';
+import Form from 'next/form';
 
 import { createInvoice } from '@/app/actions';
 
@@ -9,6 +13,25 @@ import { Textarea } from '@/components/ui/Textarea';
 import Container from '@/components/Container';
 
 export default function InvoiceNew() {
+  // const [state, setState] = useState('ready');
+
+  // // https://github.com/facebook/react/pull/29019
+
+  // function handleOnSubmit(event: SyntheticEvent) {
+  //   event.preventDefault();
+
+  //   if ( state === 'pending' ) return;
+
+  //   setState('pending');
+
+  //   startTransition(async () => {
+  //     const target = event.target as HTMLFormElement;
+  //     const formData = new FormData(target);
+
+  //     await createInvoice(formData);
+  //   });
+  // }
+
   return (
     <Container>
       <p className="text-sm font-semibold hover:text-blue-600 mb-2">
@@ -19,7 +42,13 @@ export default function InvoiceNew() {
         Create a New Invoice
       </h2>
 
-      <form action={createInvoice} className="grid gap-4 max-w-xs">
+      {/* https://github.com/vercel/next.js/pull/68102 */}
+      <Form action={createInvoice} className="grid gap-4 max-w-xs">
+      {/* <form
+        action={createInvoice}
+        onSubmit={handleOnSubmit}
+        className="grid gap-4 max-w-xs"
+      > */}
         <div>
           <Label htmlFor="name" className="block mb-2">Billing Name</Label>
           <Input id="name" name="name" type="text" />
@@ -36,11 +65,12 @@ export default function InvoiceNew() {
           <Label htmlFor="description" className="block mb-2">Description</Label>
           <Textarea id="description" name="description" />
         </div>
-        
+
         <Button className="relative">
           Submit
         </Button>
-      </form>
+      {/* </form> */}
+      </Form>
     </Container>
   );
 }
