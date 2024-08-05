@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { SignedIn, UserButton } from '@clerk/nextjs';
 
 import Container from '@/components/Container';
 
@@ -13,7 +14,11 @@ const Header = () => {
             </Link>
           </p>
         </div>
-        <div className="h-8 flex items-center gap-4"></div>
+        <div className="h-8 flex items-center gap-4">
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </Container>
     </header>
   )

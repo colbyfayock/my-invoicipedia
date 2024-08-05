@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css';
 import Header from '@/components/Header';
@@ -13,11 +14,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen grid grid-rows-[auto_1fr_auto]">
-          <Header />
-          <main>{ children }</main>
-          <Footer />
-        </div>
+        <ClerkProvider>
+          <div className="min-h-screen grid grid-rows-[auto_1fr_auto]">
+            <Header />
+            <main>{ children }</main>
+            <Footer />
+          </div>
+        </ClerkProvider>
       </body>
     </html>
   );
