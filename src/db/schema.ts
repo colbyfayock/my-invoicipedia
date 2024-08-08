@@ -1,6 +1,8 @@
 import { pgTable, serial, text, timestamp, integer, pgEnum } from 'drizzle-orm/pg-core';
 
-export const statusEnum = pgEnum('status', ['open', 'paid', 'void', 'uncollectible']);
+export const status = ['open', 'paid', 'void', 'uncollectible'] as const;
+export type Status = typeof status[number];
+export const statusEnum = pgEnum('status', status);
 
 export const Invoices = pgTable('invoices', {
   id: serial('id').primaryKey().notNull(),

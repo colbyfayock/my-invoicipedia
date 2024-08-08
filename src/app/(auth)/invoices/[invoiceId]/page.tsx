@@ -7,6 +7,7 @@ import { auth } from '@clerk/nextjs/server';
 import { cn } from '@/lib/utils';
 import { db } from '@/db';
 import { Invoices } from '@/db/schema';
+import { updateStatus } from '@/app/actions';
 
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -82,9 +83,13 @@ export default async function InvoicePage({ params }: { params: { invoiceId: str
               {AVAILABLE_STATUSES.map(status => {
                 return (
                   <DropdownMenuItem key={status.id} className="p-0">
-                    <button className="block w-full text-left py-1.5 px-2" type="submit">
-                      { status.label }
-                    </button>
+                    <form action={updateStatus} className="w-full h-full">
+                      <input type="hidden" name="id" value={invoice.id} />
+                      <input type="hidden" name="status" value={status.id} />
+                      <button className="block w-full text-left py-1.5 px-2" type="submit">
+                        { status.label }
+                      </button>
+                    </form>
                   </DropdownMenuItem>
                 );
               })}
