@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronDown, CreditCard, Ellipsis, Trash } from 'lucide-react';
-import { eq } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
+import { auth } from '@clerk/nextjs/server';
 
 import { cn } from '@/lib/utils';
 import { db } from '@/db';
@@ -18,6 +19,10 @@ import { AVAILABLE_STATUSES } from '@/data/invoices';
 export default async function InvoicePage({ params }: { params: { invoiceId: string } }) {
   const invoiceId = parseInt(params.invoiceId);
 
+  const { userId } = auth();
+
+  if ( !userId ) return null;
+
   // Could just 404, but good example
   
   if ( isNaN(invoiceId) ) {
@@ -25,8 +30,12 @@ export default async function InvoicePage({ params }: { params: { invoiceId: str
   }
 
   const [invoice] = await db.select().from(Invoices)
-      .where(eq(Invoices.id, invoiceId))
-      .limit(1);
+    .where(
+      and(
+        eq(Invoices.id, invoiceId),
+        eq(Invoices.user_id, userId),
+      )
+    ).limit(1);
 
   if ( !invoice ) {
     notFound();

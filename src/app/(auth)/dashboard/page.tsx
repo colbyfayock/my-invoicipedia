@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
+import { auth } from '@clerk/nextjs/server';
+import { eq } from 'drizzle-orm';
 
 import { cn } from '@/lib/utils';
 import { AVAILABLE_STATUSES } from '@/data/invoices';
@@ -11,7 +13,13 @@ import { db } from '@/db';
 import { Invoices } from '@/db/schema';
 
 export default async function Dashboard() {
+  const { userId } = auth();
+
+  if ( !userId ) return null;
+
   const invoices = await db.select().from(Invoices)
+    .where(eq(Invoices.user_id, userId));
+
   return (
     <Container>
       <div className="flex justify-between items-center w-full mb-6">
