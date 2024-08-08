@@ -20,6 +20,7 @@ export async function createInvoice(formData: FormData) {
 
   const results = await db.insert(Invoices)
     .values({
+      user_id: userId,
       description,
       status: 'open',
       value,

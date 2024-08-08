@@ -8,6 +8,34 @@
       "when": 1722652925508,
       "tag": "0000_nosy_red_ghost",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1723084226175,
+      "tag": "0001_nasty_karnak",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1723084867527,
+      "tag": "0002_gray_hellfire_club",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1723085121928,
+      "tag": "0003_early_morlocks",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1723085545736,
+      "tag": "0004_loose_legion",
+      "breakpoints": true
     }
   ]
 }

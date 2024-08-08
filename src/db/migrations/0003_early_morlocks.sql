@@ -1,0 +1,1 @@
+ALTER TABLE "invoices" ADD COLUMN "user_id" text DEFAULT 'NONE' NOT NULL;

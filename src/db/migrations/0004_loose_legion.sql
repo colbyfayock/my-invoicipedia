@@ -1,0 +1,1 @@
+ALTER TABLE "invoices" ALTER COLUMN "user_id" DROP DEFAULT;
