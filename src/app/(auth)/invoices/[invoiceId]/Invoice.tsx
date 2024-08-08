@@ -6,7 +6,7 @@ import { ChevronDown, CreditCard, Ellipsis, Trash } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Invoices } from '@/db/schema';
-import { updateStatus } from '@/app/actions';
+import { updateStatus, deleteInvoice } from '@/app/actions';
 
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -121,7 +121,10 @@ export default function Invoice({ invoice }: InvoiceProps) {
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <Button>Delete Invoice</Button>
+                <form action={deleteInvoice}>
+                  <input type="hidden" name="id" value={invoice.id} />
+                  <Button type="submit">Delete Invoice</Button>
+                </form>
               </DialogFooter>
             </DialogContent>
           </Dialog>

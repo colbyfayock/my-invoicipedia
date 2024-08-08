@@ -56,3 +56,25 @@ export async function updateStatus(formData: FormData) {
 
   revalidatePath(`/invoices/${id}`, 'page');
 }
+
+/**
+ * deleteInvoice
+ */
+
+export async function deleteInvoice(formData: FormData) {
+  const { userId } = auth()
+
+  if ( !userId ) throw new Error('User not found');
+
+  const id = formData.get('id') as string;
+
+  await db.delete(Invoices)
+    .where(
+      and(
+        eq(Invoices.id, parseInt(id)),
+        eq(Invoices.user_id, userId)
+      )
+    );
+
+  redirect('/dashboard');
+}
