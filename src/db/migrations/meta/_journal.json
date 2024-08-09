@@ -36,6 +36,20 @@
       "when": 1723085545736,
       "tag": "0004_loose_legion",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1723164318812,
+      "tag": "0005_thick_sharon_carter",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1723164970182,
+      "tag": "0006_greedy_microchip",
+      "breakpoints": true
     }
   ]
 }
