@@ -11,9 +11,17 @@ import { Badge } from '@/components/ui/Badge';
 
 import { AVAILABLE_STATUSES } from '@/data/invoices';
 import { Button } from '@/components/ui/Button';
-import { createPayment } from '@/app/actions';
+import { createPayment, updateStatus } from '@/app/actions';
 
-export default async function Invoice({ params }: { params: { invoiceId: string } }) {
+interface InvoiceProps {
+  params: { invoiceId: string };
+  searchParams: { status: string };
+}
+
+export default async function Invoice({ params, searchParams }: InvoiceProps) {
+  const isSuccessfulPayment = searchParams.status === 'success';
+  const isCancelledPayment = searchParams.status === 'cancelled';
+
   const [invoice] = await db.select({
       id: Invoices.id,
       status: Invoices.status,
@@ -30,11 +38,28 @@ export default async function Invoice({ params }: { params: { invoiceId: string 
   if ( !invoice ) {
     notFound();
   }
-  
+
+  // If we're returning from a successful payment and we're still in a non
+  // paid state, update the status to paid
+
+  if ( isSuccessfulPayment && invoice.status !== 'paid' ) {
+    const statusFormData = new FormData();
+
+    statusFormData.append('id', String(invoice.id));
+    statusFormData.append('status', 'paid');
+
+    await updateStatus(statusFormData);
+  }
+
   const status = AVAILABLE_STATUSES.find(status => status.id === invoice.status);
 
   return (
     <Container>
+      {isCancelledPayment && (
+        <p className="text-sm text-center text-red-900 bg-red-100 px-4 py-3 mb-4 rounded">
+          Something went wrong with your payment, please try again.
+        </p>
+      )}
       <div className="flex justify-between items-center w-full mb-8">
         <div>
           <h2 className="flex items-center gap-4 text-3xl font-semibold">
