@@ -10,15 +10,23 @@ import { Badge } from '@/components/ui/Badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/Table';
 import Container from '@/components/Container';
 import { db } from '@/db';
-import { Invoices } from '@/db/schema';
+import { Customers, Invoices } from '@/db/schema';
 
 export default async function Dashboard() {
   const { userId } = auth();
 
   if ( !userId ) return null;
 
-  const invoices = await db.select().from(Invoices)
+  const results = await db.select().from(Invoices)
+    .innerJoin(Customers, eq(Invoices.customer_id, Customers.id))
     .where(eq(Invoices.user_id, userId));
+
+  const invoices = results?.map(({ invoices, customers}) => {
+    return {
+      ...invoices,
+      customer: customers
+    }
+  });
 
   return (
     <Container>
@@ -40,8 +48,8 @@ export default async function Dashboard() {
         <TableHeader>
           <TableRow className="hover:bg-transparent">
             <TableHead className="hidden md:table-cell">Date</TableHead>
-            {/* <TableHead>Customer</TableHead> */}
-            {/* <TableHead>Email</TableHead> */}
+            <TableHead>Customer</TableHead>
+            <TableHead>Email</TableHead>
             <TableHead className="hidden sm:table-cell">Status</TableHead>
             <TableHead className="text-right">Value</TableHead>
           </TableRow>
@@ -56,20 +64,20 @@ export default async function Dashboard() {
                     { new Date(invoice.create_ts).toLocaleDateString() }
                   </Link>
                 </TableCell>
-                {/* <TableCell className="p-0">
-                  <span className="block p-4">
+                <TableCell className="p-0">
+                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <p className="font-medium">
                       { invoice.customer.name }
                     </p>
-                  </span>
-                </TableCell> */}
-                {/* <TableCell className="p-0">
-                  <span className="block p-4">
+                  </Link>
+                </TableCell>
+                <TableCell className="p-0">
+                  <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <p className="text-muted-foreground">
                       { invoice.customer.email }
                     </p>
-                  </span>
-                </TableCell> */}
+                  </Link>
+                </TableCell>
                 <TableCell className="hidden sm:table-cell p-0">
                   <Link href={`/invoices/${invoice.id}`} className="block p-4">
                     <Badge

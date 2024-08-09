@@ -5,7 +5,7 @@ import { useOptimistic } from 'react';
 import { ChevronDown, CreditCard, Ellipsis, Trash } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Invoices } from '@/db/schema';
+import { Customers, Invoices } from '@/db/schema';
 import { updateStatus, deleteInvoice } from '@/app/actions';
 
 import { Badge } from '@/components/ui/Badge';
@@ -17,7 +17,9 @@ import Container from '@/components/Container';
 import { AVAILABLE_STATUSES } from '@/data/invoices';
 
 interface InvoiceProps {
-  invoice: typeof Invoices.$inferSelect;
+  invoice: typeof Invoices.$inferSelect & {
+    customer: typeof Customers.$inferSelect
+  };
 }
 
 export default function Invoice({ invoice }: InvoiceProps) {
@@ -152,14 +154,14 @@ export default function Invoice({ invoice }: InvoiceProps) {
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Invoice Date</strong>
           <span>{ new Date(invoice.create_ts).toLocaleDateString() }</span>
         </li>
-        {/* <li className="flex gap-4">
+        <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Billing Name</strong>
           <span>{ invoice.customer.name }</span>
-        </li> */}
-        {/* <li className="flex gap-4">
+        </li>
+        <li className="flex gap-4">
           <strong className="block w-28 flex-shrink-0 font-medium text-sm">Billing Email</strong>
           <span>{ invoice.customer.email }</span>
-        </li> */}
+        </li>
       </ul>
     </Container>
   );
