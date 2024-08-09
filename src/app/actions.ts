@@ -3,7 +3,7 @@
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@clerk/nextjs/server';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 
 import { Customers, Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
@@ -54,21 +54,33 @@ export async function createInvoice(formData: FormData) {
  */
 
 export async function updateStatus(formData: FormData) {
-  const { userId } = auth()
+  const { userId, orgId } = auth()
 
   if ( !userId ) throw new Error('User not found');
 
   const id = formData.get('id') as string;
   const status = formData.get('status') as Status;
 
-  await db.update(Invoices)
-    .set({ status })
-    .where(
-      and(
-        eq(Invoices.id, parseInt(id)),
-        eq(Invoices.user_id, userId)
+  if ( orgId ) {
+    await db.update(Invoices)
+      .set({ status })
+      .where(
+        and(
+          eq(Invoices.id, parseInt(id)),
+          eq(Invoices.organization_id, orgId)
+        )
       )
-    );
+  } else {
+    await db.update(Invoices)
+      .set({ status })
+      .where(
+        and(
+          eq(Invoices.id, parseInt(id)),
+          eq(Invoices.user_id, userId),
+          isNull(Invoices.organization_id)
+        )
+      )
+  }
 
   revalidatePath(`/invoices/${id}`, 'page');
 }
@@ -78,19 +90,30 @@ export async function updateStatus(formData: FormData) {
  */
 
 export async function deleteInvoice(formData: FormData) {
-  const { userId } = auth()
+  const { userId, orgId } = auth()
 
   if ( !userId ) throw new Error('User not found');
 
   const id = formData.get('id') as string;
 
-  await db.delete(Invoices)
-    .where(
-      and(
-        eq(Invoices.id, parseInt(id)),
-        eq(Invoices.user_id, userId)
-      )
-    );
+  if ( orgId ) {
+    await db.delete(Invoices)
+      .where(
+        and(
+          eq(Invoices.id, parseInt(id)),
+          eq(Invoices.organization_id, orgId)
+        )
+      );
+  } else {
+    await db.delete(Invoices)
+      .where(
+        and(
+          eq(Invoices.id, parseInt(id)),
+          eq(Invoices.user_id, userId),
+          isNull(Invoices.organization_id)
+        )
+      );
+  }
 
   redirect('/dashboard');
 }

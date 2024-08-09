@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import { auth } from '@clerk/nextjs/server';
-import { eq } from 'drizzle-orm';
+import { eq, and, isNull } from 'drizzle-orm';
 
 import { cn } from '@/lib/utils';
 import { AVAILABLE_STATUSES } from '@/data/invoices';
@@ -13,13 +13,26 @@ import { db } from '@/db';
 import { Customers, Invoices } from '@/db/schema';
 
 export default async function Dashboard() {
-  const { userId } = auth();
+  const { userId, orgId } = auth();
 
   if ( !userId ) return null;
 
-  const results = await db.select().from(Invoices)
-    .innerJoin(Customers, eq(Invoices.customer_id, Customers.id))
-    .where(eq(Invoices.user_id, userId));
+  let results;
+
+  if ( orgId ) {
+    results = await db.select().from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customer_id, Customers.id))
+      .where(eq(Invoices.organization_id, orgId));
+  } else {
+    results = await db.select().from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customer_id, Customers.id))
+      .where(
+        and(
+          eq(Invoices.user_id, userId),
+          isNull(Invoices.organization_id)
+        )
+      );
+  }
 
   const invoices = results?.map(({ invoices, customers}) => {
     return {
