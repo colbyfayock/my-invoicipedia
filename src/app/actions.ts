@@ -13,7 +13,7 @@ import { db } from '@/db';
  */
 
 export async function createInvoice(formData: FormData) {
-  const { userId } = auth()
+  const { userId, orgId } = auth()
 
   if ( !userId ) throw new Error('User not found');
 
@@ -29,6 +29,7 @@ export async function createInvoice(formData: FormData) {
       name,
       email,
       user_id: userId,
+      organization_id: orgId || null,
     }).returning({
       id: Customers.id
     });
@@ -36,6 +37,7 @@ export async function createInvoice(formData: FormData) {
   const results = await db.insert(Invoices)
     .values({
       user_id: userId,
+      organization_id: orgId || null,
       customer_id: customer[0].id,
       description,
       status: 'open',
