@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/Badge';
 
 import { AVAILABLE_STATUSES } from '@/data/invoices';
 import { Button } from '@/components/ui/Button';
+import { createPayment } from '@/app/actions';
 
 export default async function Invoice({ params }: { params: { invoiceId: string } }) {
   const [invoice] = await db.select({
@@ -91,10 +92,13 @@ export default async function Invoice({ params }: { params: { invoiceId: string 
               <h2 className="text-xl font-bold mb-4">
                 Manage Invoice
               </h2>
-              <Button className="flex gap-2 items-center font-bold bg-green-700" type="submit" size="lg">
-                <CreditCard className="w-5 h-5" />
-                Pay Invoice
-              </Button>
+              <form action={createPayment}>
+                <input type="hidden" name="id" value={invoice.id} />
+                <Button className="flex gap-2 items-center font-bold bg-green-700" type="submit" size="lg">
+                  <CreditCard className="w-5 h-5" />
+                  Pay Invoice
+                </Button>
+              </form>
             </>
           )}
           {invoice.status === 'paid' && (

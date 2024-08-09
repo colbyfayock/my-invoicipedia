@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { auth } from '@clerk/nextjs/server';
 import { eq, and, isNull } from 'drizzle-orm';
 import Stripe from 'stripe';
@@ -119,4 +120,45 @@ export async function deleteInvoice(formData: FormData) {
   }
 
   redirect('/dashboard');
+}
+
+
+/**
+ * createPayment
+ */
+
+export async function createPayment(formData: FormData) {
+  const headersList = headers();
+  const origin = headersList.get('origin');
+  const id = formData.get('id') as string;
+
+  const [invoice] = await db.select({
+      status: Invoices.status,
+      value: Invoices.value,
+    })
+    .from(Invoices)
+    .where(eq(Invoices.id, parseInt(id)))
+    .limit(1);
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: 'usd',
+          product: 'prod_IAs6jglR9ZFeCR',
+          unit_amount_decimal: String(invoice.value)
+        },
+        quantity: 1,
+      },
+    ],
+    mode: 'payment',
+    success_url: `${origin}/invoices/${id}/payment?success=true`,
+    cancel_url: `${origin}/invoices/${id}/payment?canceled=true`,
+  });
+
+  if ( typeof session.url !== 'string' ) {
+    throw new Error('Invalid session URL.');
+  }
+
+  redirect(session.url);
 }
