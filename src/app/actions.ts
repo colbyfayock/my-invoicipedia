@@ -58,21 +58,8 @@ export async function updateStatus(formData: FormData) {
 
   if ( !userId ) throw new Error('User not found');
 
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
   const id = formData.get('id') as string;
   const status = formData.get('status') as Status;
-
-    // Create a customer
-
-  const customer = await db.insert(Customers)
-    .values({
-      name,
-      email,
-      user_id: userId,
-    }).returning({
-      id: Customers.id
-    });
 
   await db.update(Invoices)
     .set({ status })
