@@ -4,9 +4,12 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { auth } from '@clerk/nextjs/server';
 import { eq, and, isNull } from 'drizzle-orm';
+import Stripe from 'stripe';
 
 import { Customers, Invoices, Status } from '@/db/schema';
 import { db } from '@/db';
+
+const stripe = new Stripe(String(process.env.STRIPE_SECRET_KEY));
 
 /**
  * createInvoice

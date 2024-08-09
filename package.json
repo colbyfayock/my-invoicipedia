@@ -30,6 +30,7 @@
     "postcss": "^8.4.38",
     "react": "^19.0.0-rc-3208e73e-20240730",
     "react-dom": "^19.0.0-rc-3208e73e-20240730",
+    "stripe": "^16.7.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
